@@ -53,7 +53,9 @@ namespace MovieReviewAPILibrary.DAL
         public User GetUserInfo(string username, string pwd)
         {
             User user = null;
-            using (DatabaseLayer dbLayer = new DatabaseLayer())
+            DatabaseLayer dbLayer = new DatabaseLayer();
+            
+            try
             {
                 SqlCommand sqlCmd = new SqlCommand("GetUserInfo");
                 sqlCmd.CommandType = CommandType.StoredProcedure;
@@ -61,8 +63,12 @@ namespace MovieReviewAPILibrary.DAL
                 sqlCmd.Parameters.AddWithValue("@Pwd", pwd);
                 user = dbLayer.GetEntityList<User>(sqlCmd).FirstOrDefault();
             }
+            
+            finally
+            {
+                dbLayer.Dispose();
+            }
             return user;
         }
-
     }
 }
